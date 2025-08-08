@@ -12,7 +12,7 @@ def iterparse(data):
         if not matched:
             break
         pos = matched.start()
-        decoded, pos = decoder.raw_decode(data,pos)
+        decoded, pos = decoder.raw_decode(data,pos)python webcam.py
         yield decoded
     
 def data_base(label,count):

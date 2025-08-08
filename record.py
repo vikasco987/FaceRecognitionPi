@@ -1,20 +1,29 @@
-import MySQLdb
+from pymongo import MongoClient
 
-db = MySQLdb.connect("localhost", "root", "raspberry", "data")
-curs=db.cursor()
+# Connect to MongoDB server (default is localhost:27017)
+client = MongoClient("mongodb://localhost:27017/")
+
+# Use or create the database named "data"
+db = client["data"]
+
+# Use or create the collection named "record"
+record_collection = db["record"]
+
+# Sample records to insert
+records = [
+    {"Id": 0, "Name": "Shubham", "Folder_Name": "Shubham"},
+    {"Id": 1, "Name": "Sankar", "Folder_Name": "Sankar"},
+    {"Id": 2, "Name": "Apurv", "Folder_Name": "Apurv"},
+    {"Id": 3, "Name": "Rahul", "Folder_Name": "Rahul"},
+    {"Id": 4, "Name": "Kittu", "Folder_Name": "Kittu"},
+]
+
+# Optional: Clear existing collection for a clean slate
+record_collection.delete_many({})
+
+# Insert the records
 try:
-        curs.execute("CREATE TABLE IF NOT EXISTS record (Serial_No INT(5) NOT NULL AUTO_INCREMENT PRIMARY KEY, Id INT(5) NOT NULL , Name VARCHAR(20) NOT NULL, Folder_Name VARCHAR(20) NOT NULL)")
-        #curs.execute ("INSERT INTO record (Id,Name) \
-        #        VALUES ('%d', '%s')"%(0,'Shubham'))
-        curs.execute ("INSERT INTO record (Id,Name)values(0,'Shubham')")
-        curs.execute ("INSERT INTO record (Id,Name)values(1,'Sankar')")
-        curs.execute ("INSERT INTO record (Id,Name)values(2,'Apurv')")
-        curs.execute ("INSERT INTO record (Id,Name)values(3,'Rahul')")
-        curs.execute ("INSERT INTO record (Id,Name)values(4,'Kittu')")
-        print "Data committed"
-        db.commit()
-except:
-        print "Data Rollback"
-        db.rollback()
-
-
+    record_collection.insert_many(records)
+    print("Data inserted successfully into MongoDB")
+except Exception as e:
+    print("Error inserting data:", e)
